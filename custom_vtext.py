@@ -1,12 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout
 from PyQt5.QtGui import QPainter, QTransform
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import Qt, QSize, pyqtProperty
 
 
 class VerticalLabel(QLabel):
-
-    def __init__(self, *args):
-        QLabel.__init__(self, *args)
+    def __init__(self, text="", parent=None):
+        super(VerticalLabel, self).__init__(text, parent)
 
     def paintEvent(self, event):
         QLabel.paintEvent(self, event)
@@ -29,9 +28,20 @@ class VerticalText(QWidget):
     def __init__(self, parent=None):
         super(VerticalText, self).__init__(parent)
 
-        self.label = VerticalLabel("Vertical Text", self)
+        self._text = "Vertical Text"
+        self.label = VerticalLabel(self._text, self)
 
         layout = QVBoxLayout(self)
         layout.addWidget(self.label)
 
         self.setLayout(layout)
+
+    def getText(self):
+        return self._text
+
+    def setText(self, text):
+        self._text = text
+        self.label.setText(text)
+        self.update()
+
+    text = pyqtProperty(str, getText, setText, user=True)
